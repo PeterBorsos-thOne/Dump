@@ -16,17 +16,17 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE postgres;
+DROP DATABASE number_guess;
 --
--- Name: postgres; Type: DATABASE; Schema: -; Owner: postgres
+-- Name: number_guess; Type: DATABASE; Schema: -; Owner: freecodecamp
 --
 
-CREATE DATABASE postgres WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C.UTF-8' LC_CTYPE = 'C.UTF-8';
+CREATE DATABASE number_guess WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C.UTF-8' LC_CTYPE = 'C.UTF-8';
 
 
-ALTER DATABASE postgres OWNER TO postgres;
+ALTER DATABASE number_guess OWNER TO freecodecamp;
 
-\connect postgres
+\connect number_guess
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -39,13 +39,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- Name: DATABASE postgres; Type: COMMENT; Schema: -; Owner: postgres
---
-
-COMMENT ON DATABASE postgres IS 'default administrative connection database';
-
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -56,8 +49,8 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.games (
     game_id integer NOT NULL,
-    user_id integer NOT NULL,
-    guesses integer DEFAULT 0
+    user_id integer,
+    guesses integer
 );
 
 
@@ -91,7 +84,7 @@ ALTER SEQUENCE public.games_game_id_seq OWNED BY public.games.game_id;
 
 CREATE TABLE public.users (
     user_id integer NOT NULL,
-    name character varying(45)
+    name character varying(32)
 );
 
 
@@ -149,14 +142,14 @@ ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.u
 -- Name: games_game_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.games_game_id_seq', 85, true);
+SELECT pg_catalog.setval('public.games_game_id_seq', 9, true);
 
 
 --
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 50, true);
+SELECT pg_catalog.setval('public.users_user_id_seq', 4, true);
 
 
 --
@@ -165,14 +158,6 @@ SELECT pg_catalog.setval('public.users_user_id_seq', 50, true);
 
 ALTER TABLE ONLY public.games
     ADD CONSTRAINT games_pkey PRIMARY KEY (game_id);
-
-
---
--- Name: users users_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_name_key UNIQUE (name);
 
 
 --
