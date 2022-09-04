@@ -1,88 +1,211 @@
-#! /bin/bash
+--
+-- PostgreSQL database dump
+--
 
-PSQL="psql --username=freecodecamp --dbname=salon --no-align --tuples-only -c"
+-- Dumped from database version 12.9 (Ubuntu 12.9-2.pgdg20.04+1)
+-- Dumped by pg_dump version 12.9 (Ubuntu 12.9-2.pgdg20.04+1)
 
-#for testing
-#Q=$($PSQL "TRUNCATE TABLE appointments")
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
 
-echo -e "\n~~~~~ MY SALON ~~~~~\n"
+DROP DATABASE periodic_table;
+--
+-- Name: periodic_table; Type: DATABASE; Schema: -; Owner: postgres
+--
 
-MAIN() {
-    if [[ $1 ]]
-  then
-    echo -e "\n$1"
-  else
-    echo "Welcome to My Salon, how can I help you?"
-  fi
-  
-  #write out options
-  echo "$($PSQL "SELECT service_id, name FROM services ORDER BY service_id ASC")" | while IFS="|" read SER_ID SERVICE_NAME
-  do
-    if [[ $SER_ID =~ [1-9]+$ ]]
-    then
-      echo "$SER_ID) $SERVICE_NAME"
-    fi
-  done
+CREATE DATABASE periodic_table WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C.UTF-8' LC_CTYPE = 'C.UTF-8';
 
-  read SERVICE_ID_SELECTED
-  NUM_SER="$($PSQL "SELECT COUNT(service_id) FROM services")"
 
-  #is SERVICE_ID_SELECTED a number
-  if [[ $SERVICE_ID_SELECTED =~ ^[0-9]+$ ]]
-  then
-    #is SERVICE_ID_SELECTED's num in the list
-    if [[ $SERVICE_ID_SELECTED -le $NUM_SER ]]
-    then
-    SERVICE_HANDELER $SERVICE_ID_SELECTED
-    else
-      # return to main menu
-      MAIN "I could not find that service. What would you like today?"
-    fi
-  else
-    # return to main menu
-    MAIN "I could not find that service. What would you like today?"
-  fi
+ALTER DATABASE periodic_table OWNER TO postgres;
 
-}
+\connect periodic_table
 
-SERVICE_HANDELER() {
-  #prompt for phone number
-  echo -e "\nWhat's your phone number?"
-  read CUSTOMER_PHONE
-  
-  #is that phone exist?
-  CUSTOMER_NAME=$($PSQL "SELECT name FROM customers WHERE phone = '$CUSTOMER_PHONE'")
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
 
-  #does customer exist
-  if [[ $CUSTOMER_NAME ]]
-  then
-  
-    #make appointment
-    MAKE_APPOINTMENT $CUSTOMER_NAME $1
-  else
+SET default_tablespace = '';
 
-    # write in new customer
-    echo -e "\nI don't have a record for that phone number, what's your name?"
-    read CUSTOMER_NAME
-    NAME_INPUT=$($PSQL "INSERT INTO customers(phone, name) VALUES('$CUSTOMER_PHONE','$CUSTOMER_NAME')")
+SET default_table_access_method = heap;
 
-    #make appointment
-    MAKE_APPOINTMENT $CUSTOMER_NAME $1
-  fi
-}
+--
+-- Name: elements; Type: TABLE; Schema: public; Owner: freecodecamp
+--
 
-MAKE_APPOINTMENT() {
-  #arg1 name of CUSTOMER_NAME, arg2 SERVICE_ID_SELECTED
-  
-  #get customer_id
-  CUST_ID=$($PSQL "SELECT customer_id FROM customers WHERE name = '$1'")
-  echo -e "\nWhat time would you like your cut, $1?"
-  read SERVICE_TIME
-  
-  #input appointment into db
-  MAKE_APP=$($PSQL "INSERT INTO appointments(customer_id, service_id, time) VALUES($CUST_ID, $2, '$SERVICE_TIME')")
- 
-  echo -e "\nI have put you down for a $($PSQL "SELECT name FROM services WHERE service_id = $2") at $SERVICE_TIME, $1.\n"
+CREATE TABLE public.elements (
+    atomic_number integer NOT NULL,
+    symbol character varying(2) NOT NULL,
+    name character varying(40) NOT NULL,
+    constrint name
+);
 
-}
-MAIN
+
+ALTER TABLE public.elements OWNER TO freecodecamp;
+
+--
+-- Name: properties; Type: TABLE; Schema: public; Owner: freecodecamp
+--
+
+CREATE TABLE public.properties (
+    atomic_number integer NOT NULL,
+    atomic_mass numeric NOT NULL,
+    melting_point_celsius numeric NOT NULL,
+    boiling_point_celsius numeric NOT NULL,
+    type_id integer NOT NULL
+);
+
+
+ALTER TABLE public.properties OWNER TO freecodecamp;
+
+--
+-- Name: types; Type: TABLE; Schema: public; Owner: freecodecamp
+--
+
+CREATE TABLE public.types (
+    type_id integer NOT NULL,
+    type character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.types OWNER TO freecodecamp;
+
+--
+-- Data for Name: elements; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+--
+
+INSERT INTO public.elements VALUES (1, 'H', 'Hydrogen', NULL);
+INSERT INTO public.elements VALUES (4, 'Be', 'Beryllium', NULL);
+INSERT INTO public.elements VALUES (5, 'B', 'Boron', NULL);
+INSERT INTO public.elements VALUES (6, 'C', 'Carbon', NULL);
+INSERT INTO public.elements VALUES (7, 'N', 'Nitrogen', NULL);
+INSERT INTO public.elements VALUES (8, 'O', 'Oxygen', NULL);
+INSERT INTO public.elements VALUES (3, 'Li', 'Lithium', NULL);
+INSERT INTO public.elements VALUES (2, 'He', 'Helium', NULL);
+INSERT INTO public.elements VALUES (9, 'F', 'Fluorine', NULL);
+INSERT INTO public.elements VALUES (10, 'Ne', 'Neon', NULL);
+
+
+--
+-- Data for Name: properties; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+--
+
+INSERT INTO public.properties VALUES (3, 6.94, 180.54, 1342, 1);
+INSERT INTO public.properties VALUES (4, 9.0122, 1287, 2470, 1);
+INSERT INTO public.properties VALUES (5, 10.81, 2075, 4000, 2);
+INSERT INTO public.properties VALUES (1, 1.008, -259.1, -252.9, 3);
+INSERT INTO public.properties VALUES (2, 4.0026, -272.2, -269, 3);
+INSERT INTO public.properties VALUES (6, 12.011, 3550, 4027, 3);
+INSERT INTO public.properties VALUES (7, 14.007, -210.1, -195.8, 3);
+INSERT INTO public.properties VALUES (8, 15.999, -218, -183, 3);
+INSERT INTO public.properties VALUES (10, 20.18, -248.6, -246.1, 3);
+INSERT INTO public.properties VALUES (9, 18.998, -220, -188.1, 3);
+
+
+--
+-- Data for Name: types; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+--
+
+INSERT INTO public.types VALUES (1, 'metal');
+INSERT INTO public.types VALUES (3, 'nonmetal');
+INSERT INTO public.types VALUES (2, 'metalloid');
+
+
+--
+-- Name: elements elements_atomic_number_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_atomic_number_key UNIQUE (atomic_number);
+
+
+--
+-- Name: elements elements_constrint_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_constrint_key UNIQUE (constrint);
+
+
+--
+-- Name: elements elements_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_name_key UNIQUE (name);
+
+
+--
+-- Name: elements elements_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_pkey PRIMARY KEY (atomic_number);
+
+
+--
+-- Name: elements elements_symbol_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_symbol_key UNIQUE (symbol);
+
+
+--
+-- Name: properties properties_atomic_number_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.properties
+    ADD CONSTRAINT properties_atomic_number_key UNIQUE (atomic_number);
+
+
+--
+-- Name: properties properties_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.properties
+    ADD CONSTRAINT properties_pkey PRIMARY KEY (atomic_number);
+
+
+--
+-- Name: types types_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.types
+    ADD CONSTRAINT types_pkey PRIMARY KEY (type_id);
+
+
+--
+-- Name: properties properties_atomic_number_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.properties
+    ADD CONSTRAINT properties_atomic_number_fkey FOREIGN KEY (atomic_number) REFERENCES public.elements(atomic_number);
+
+
+--
+-- Name: properties properties_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.properties
+    ADD CONSTRAINT properties_type_id_fkey FOREIGN KEY (type_id) REFERENCES public.types(type_id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
