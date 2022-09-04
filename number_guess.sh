@@ -2,16 +2,14 @@
 
 PSQL="psql --username=freecodecamp --dbname=postgres -t --no-align -c"
 
-# sstarts with INISIATAE at the bottom
-
-echo -e "Enter your username:"
-read NAME
-
-# checking the name in data base
-USER_ID=$($PSQL "SELECT user_id FROM users WHERE name = '$NAME'")
-  
+# starts with INISIATAE at the bottom
 
 INISIATAE() {
+  echo -e "Enter your username:"
+  read NAME
+
+  # checking the name in data base
+  USER_ID=$($PSQL "SELECT user_id FROM users WHERE name = '$NAME'")
   
   if [[ ! $USER_ID =~ ^[0-9]+$ ]]
   # user does not exist
@@ -27,9 +25,9 @@ INISIATAE() {
 
   # if user is already in data base
   else
-    # print info about user
+    # get and print info about user
     GAMES_PLAYED=$($PSQL "SELECT COUNT(user_id) FROM games WHERE user_id = $USER_ID")
-    BEST_GAME=$($PSQL "SELECT MAX(guesses) FROM games WHERE user_id = $USER_ID")
+    BEST_GAME=$($PSQL "SELECT MIN(guesses) FROM games WHERE user_id = $USER_ID")
     
     echo -e "Welcome back, $NAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 
