@@ -1,6 +1,6 @@
 #! /bin/bash
 
-PSQL="psql --username=freecodecamp --dbname=postgres -t --no-align -c"
+PSQL="psql --username=freecodecamp --dbname=number_guess -t --no-align -c"
 
 # starts with INISIATAE at the bottom
 
@@ -21,7 +21,7 @@ INISIATAE() {
     USER_ID=$($PSQL "SELECT user_id FROM users WHERE name = '$NAME'")
 
     # to the game
-    THE_GAME
+    THE_GAME $USER_ID
 
   # if user is already in data base
   else
