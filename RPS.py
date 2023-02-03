@@ -4,37 +4,37 @@ import tensorflow as tf
 import random
 
   # Build the model, a function for this would have been nice or at least a loop... Self critique ;) I'm not lazy, just energy efficient!
+def build_model():
+      # Model 1
+  model_1 = tf.keras.Sequential([
+      tf.keras.layers.Dense(1024, activation='relu'),
+      tf.keras.layers.Dense(1024, activation='relu'),
+      tf.keras.layers.Dense(496, activation='relu'),
+      tf.keras.layers.Dense(248, activation='relu'),
+      tf.keras.layers.Dense(3)])
 
-    # Model 1
-model_1 = tf.keras.Sequential([
-    tf.keras.layers.Dense(1024, activation='relu'),
-    tf.keras.layers.Dense(1024, activation='relu'),
-    tf.keras.layers.Dense(496, activation='relu'),
-    tf.keras.layers.Dense(248, activation='relu'),
-    tf.keras.layers.Dense(3)])
+      # Model 2
+  model_2 = tf.keras.Sequential([
+      tf.keras.layers.Dense(1024, activation='relu'),
+      tf.keras.layers.Dense(1024, activation='relu'),
+      tf.keras.layers.Dense(496, activation='relu'),
+      tf.keras.layers.Dense(248, activation='relu'),
+      tf.keras.layers.Dense(3)])
 
-    # Model 2
-model_2 = tf.keras.Sequential([
-    tf.keras.layers.Dense(1024, activation='relu'),
-    tf.keras.layers.Dense(1024, activation='relu'),
-    tf.keras.layers.Dense(496, activation='relu'),
-    tf.keras.layers.Dense(248, activation='relu'),
-    tf.keras.layers.Dense(3)])
+    # Compile the models, a function for this would have been nice or at least a loop...
+  learning_rate_ = 0.0002
 
-  # Compile the models, a function for this would have been nice or at least a loop...
-learning_rate_ = 0.0002
+      # Model 1
+  model_1.compile(
+                optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate_),
+                loss='mean_absolute_error',
+                metrics=['accuracy'])
 
-    # Model 1
-model_1.compile(
-              optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate_),
-              loss='mean_absolute_error',
-              metrics=['accuracy'])
-
-    # Model 2
-model_2.compile(
-              optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate_),
-              loss='mean_absolute_error',
-              metrics=['accuracy'])
+      # Model 2
+  model_2.compile(
+                optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate_),
+                loss='mean_absolute_error',
+                metrics=['accuracy'])
 
 
 
@@ -65,6 +65,7 @@ def player(prev_play,
   if prev_play == '' or prev_guess == '' or loops == 0:
     prev_play = 'R'
     prev_guess = 'R'
+    build_model()
 
 
     # Update history
@@ -77,13 +78,13 @@ def player(prev_play,
 #__________________#
 
 
-  # Getting training data. Nope! Just random isn't enough
+  # Getting training data. Nope! Just random isn't enough.
   num_train_data = 200
   if loops < num_train_data:
     #prediction = random.randint(0,2)
-    if loops < num_train_data*(2/10):
+    if loops < num_train_data*(2.5/10):
       prediction = random.randint(0,2)
-    elif loops < num_train_data*(5/10):
+    elif loops < num_train_data*(7/10):
       pattern = [0, 1, 2]
       prediction = pattern[loops % 3]
     else:
@@ -143,7 +144,7 @@ def player(prev_play,
       # Average modell outputs
     prediction = []
     for n in range(3):
-      prediction.append(((prediction_1[0][n])*1 + (prediction_2[0][n])*1.1)/2)
+      prediction.append(((prediction_1[0][n])*1 + (prediction_2[0][n])*1.2)/2)
 
 
       # Pick the most likely opponent move
@@ -165,5 +166,6 @@ def player(prev_play,
     loops = 0
     player_history.clear()
     opponent_history.clear()
+    print(opponent_history)
 
   return prediction
