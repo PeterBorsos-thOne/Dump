@@ -7,7 +7,7 @@ import random
 
     # Model 1
 model_1 = tf.keras.Sequential([
-    tf.keras.layers.Dense(500, activation='relu'),
+    tf.keras.layers.Dense(1024, activation='relu'),
     tf.keras.layers.Dense(1024, activation='relu'),
     tf.keras.layers.Dense(496, activation='relu'),
     tf.keras.layers.Dense(248, activation='relu'),
@@ -15,7 +15,7 @@ model_1 = tf.keras.Sequential([
 
     # Model 2
 model_2 = tf.keras.Sequential([
-    tf.keras.layers.Dense(500, activation='relu'),
+    tf.keras.layers.Dense(1024, activation='relu'),
     tf.keras.layers.Dense(1024, activation='relu'),
     tf.keras.layers.Dense(496, activation='relu'),
     tf.keras.layers.Dense(248, activation='relu'),
@@ -80,22 +80,20 @@ def player(prev_play,
   # Getting training data. Nope! Just random isn't enough
   num_train_data = 200
   if loops < num_train_data:
-    if loops < num_train_data*(7/20):
+    #prediction = random.randint(0,2)
+    if loops < num_train_data*(2/10):
       prediction = random.randint(0,2)
-    elif loops < num_train_data*(15/20):
+    elif loops < num_train_data*(5/10):
       pattern = [0, 1, 2]
       prediction = pattern[loops % 3]
     else:
       pattern = [0, 2, 1, 0, 0 , 2, 1, 2, 1]
       prediction = pattern[loops % 9]
-    '''if loops > num_train_data*(20/20):
-      prediction = 0
-    else:
-      prediction = random.randint(0,2)'''
-    
+
 
   # Trainig
   elif loops == num_train_data:
+    print('Work, work!')
 
      # Collecting and processing data 
     ds_1 = []
@@ -165,8 +163,6 @@ def player(prev_play,
     # Pure lazyness, I could have checked the Accuracy of the model every call. If this work than I 'aint gonna fix it.
   if loops == 1000:
     loops = 0
-    #print(player_history[-200:])
-    #print(opponent_history[-200:])
     player_history.clear()
     opponent_history.clear()
 
